@@ -9,7 +9,7 @@ class Slider extends React.Component {
     this.onNext = this.onNext.bind(this);
 
     this.state = {
-      activeIndex: '-200%'
+      activeIndex: 0
     }
   }
 
@@ -30,10 +30,18 @@ class Slider extends React.Component {
 
   onPrev() {
     console.log('prev')
+    let prevIndex = (this.state.activeIndex - 1 >= 0) ? this.state.activeIndex - 1 : 0
+    this.setState({
+      activeIndex: prevIndex
+    })
   }
 
   onNext() {
     console.log('next')
+    let nextIndex = (this.state.activeIndex + 1 <= 5) ? this.state.activeIndex + 1 : 5
+    this.setState({
+      activeIndex: nextIndex
+    })
   }
 
   render() {
@@ -41,7 +49,7 @@ class Slider extends React.Component {
     return (
       <div className="slider-wrapper">
         <div className="prev" onClick={() => this.onPrev()}>-</div>
-        <div className="slider" style={{left: this.state.activeIndex}}>
+        <div className="slider" style={{left: -(this.state.activeIndex * 100) + '%'}}>
           {data.images.map((image, index) =>
             <div className="slide" key={'image_'+index}>
               <div ref={'slide_'+index} key={'slide_'+index} className="slide-inner" style={{backgroundImage: 'url('+image+')'}}/>
