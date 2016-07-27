@@ -38,7 +38,7 @@ class Slider extends React.Component {
 
   onNext() {
     console.log('next')
-    let nextIndex = (this.state.activeIndex + 1 <= 5) ? this.state.activeIndex + 1 : 5
+    let nextIndex = (this.state.activeIndex + 1 <= 4) ? this.state.activeIndex + 1 : 4
     this.setState({
       activeIndex: nextIndex
     })
