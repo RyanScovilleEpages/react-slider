@@ -1,0 +1,48 @@
+.slider-wrapper {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.slider {
+    top: 0;
+    height: 200px;
+    overflow: hidden;
+    width: 500%;
+    position: absolute;
+}
+
+.slide {
+    width: 100%;
+    display: inline-block;
+    left: 0;
+    top: 0;
+}
+
+.slide-inner {
+    width: 20%;
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.prev,
+.next {
+    width: 30px;
+    height: 30px;
+    z-index: 1;
+    position: absolute;
+    border: 1px dashed black;
+    top: 85px;
+    text-align: center;
+}
+
+.prev {
+    left: 0;
+}
+
+.next {
+    right: 0;
+}
