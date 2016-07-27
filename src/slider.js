@@ -47,7 +47,7 @@ class Slider extends React.Component {
     return (
       <div className="slider-wrapper">
         <div className="prev" onClick={() => this.onPrev()}>-</div>
-        <div className="slider" style={{left: -(this.state.activeIndex * 100) + '%'}}>
+        <div className="slider" style={{left: -(this.state.activeIndex * 100) + '%', transition: 'left ' + data.slideInterval / 1000 + 's'}}>
           {data.images.map((image, index) =>
             <div className="slide" key={'image_'+index}>
               <div ref={'slide_'+index} key={'slide_'+index} className="slide-inner" style={{backgroundImage: 'url('+image+')'}}/>

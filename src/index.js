@@ -11,7 +11,7 @@ const slideData = {
     '/src/img/04.png',
     '/src/img/05.jpg'],
   initialActiveIndex: 3,
-  slideInterval: 2500,
+  slideInterval: 1000,
   showBullets: true}
 
 ReactDOM.render(
