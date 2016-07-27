@@ -9,7 +9,7 @@ class Slider extends React.Component {
     this.onNext = this.onNext.bind(this);
 
     this.state = {
-      activeIndex: 0
+      activeIndex: props.data.initialActiveIndex
     }
   }
 
@@ -19,17 +19,14 @@ class Slider extends React.Component {
 
   static get defaultProps() {
     return {
-      data: {
-        images: [],
-        slideInterval: 2500,
-        showBullets: true,
-        activeIndex: 0
-      }
-    };
+      images: [],
+      slideInterval: 2500,
+      showBullets: true,
+      initialActiveIndex: 0
+    }
   }
 
   onPrev() {
-    console.log('prev')
     let prevIndex = (this.state.activeIndex - 1 >= 0) ? this.state.activeIndex - 1 : 0
     this.setState({
       activeIndex: prevIndex
@@ -37,15 +34,16 @@ class Slider extends React.Component {
   }
 
   onNext() {
-    console.log('next')
-    let nextIndex = (this.state.activeIndex + 1 <= 4) ? this.state.activeIndex + 1 : 4
+    let nextIndex = (this.state.activeIndex + 1 <= this.props.data.images.length - 1)
+      ? this.state.activeIndex + 1
+      : this.props.data.images.length -1
     this.setState({
       activeIndex: nextIndex
     })
   }
 
   render() {
-    const {data} = this.props;
+    const {data} = this.props
     return (
       <div className="slider-wrapper">
         <div className="prev" onClick={() => this.onPrev()}>-</div>
