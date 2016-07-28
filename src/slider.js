@@ -84,11 +84,11 @@ class Slider extends React.Component {
     this.setState({dX})
   }
 
-  handleSwiped(e, x, y, isFlick) {
+  handleSwiped(e, x, y, isFlick) { /*eslint no-unused-expressions: [2, { allowTernary: true }]*/
     // look for a swipe and then prev/next
     Math.abs(x) > (this.state.sliderWrapperWidth * 0.5)
       ? (x > 0) ? this.onNext() : this.onPrev()
-      : this.setState({dX: 0, sliding: false}) //snap back to image
+      : this.setState({dX: 0, sliding: false}) // snap back to image
   }
 
   render() {
