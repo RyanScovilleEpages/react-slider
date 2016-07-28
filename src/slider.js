@@ -10,8 +10,8 @@ class Slider extends React.Component {
     this.onPrev = this.onPrev.bind(this);
     this.onNext = this.onNext.bind(this);
     this.concatToLazyLoadedArray = this.concatToLazyLoadedArray.bind(this);
-    this.onSwiping = this.onSwiping.bind(this);
-    this.onSwiped = this.onSwiped.bind(this);
+    this.handleSwiping = this.handleSwiping.bind(this);
+    this.handleSwiped = this.handleSwiped.bind(this);
 
     this.state = {
       activeIndex: props.data.initialActiveIndex,
@@ -68,7 +68,7 @@ class Slider extends React.Component {
     return (lazyLoaded.indexOf(index) === -1) ? lazyLoaded.concat(index) : lazyLoaded
   }
 
-  onSwiping(e, dX, dY, absX, absY, v) {
+  handleSwiping(e, dX, dY, absX, absY, v) {
     this.setState({sliding: false})
     // first slide, don't swipe left
     if (dX < 0 && this.state.activeIndex === 0) {
@@ -84,26 +84,21 @@ class Slider extends React.Component {
     this.setState({dX})
   }
 
-  onSwiped(e, x, y, isFlick) {
+  handleSwiped(e, x, y, isFlick) {
     // look for a swipe and then prev/next
-    if (Math.abs(x) > this.state.sliderWrapperWidth * 0.5) {
-      this.setState({dX: 0})
-      x > 0 ? this.onNext() : this.onPrev()
-      return true
-    } else {
-      // snap back to image
-      this.setState({dX: 0, sliding: false})
-    }
+    Math.abs(x) > (this.state.sliderWrapperWidth * 0.5)
+      ? (x > 0) ? this.onNext() : this.onPrev()
+      : this.setState({dX: 0, sliding: false}) //snap back to image
   }
 
   render() {
     const {data} = this.props
     return (
-      <Swipeable className="slider-wrapper" onSwiping={this.onSwiping} onSwiped={this.onSwiped} ref="sliderWrapper">
+      <Swipeable className="slider-wrapper" onSwiping={this.handleSwiping} onSwiped={this.handleSwiped} ref="sliderWrapper">
         <div className="prev" onClick={() => this.onPrev()}>-</div>
         <div className="slider"
              style={{left: -((this.state.activeIndex * this.state.sliderWrapperWidth) + this.state.dX) + 'px',
-             transition: 'left ' + (this.state.sliding ? data.slideInterval / 1000 + 's' : 0 + 's')}}>
+             transition: 'left ' + (this.state.sliding ? (data.slideInterval / 1000) + 's' : 0 + 's')}}>
           {data.images.map((image, index) =>
             <div className="slide" key={'image_'+index}>
               <div key={'slide_'+index}
