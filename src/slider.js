@@ -12,6 +12,7 @@ class Slider extends React.Component {
     this.concatToLazyLoadedArray = this.concatToLazyLoadedArray.bind(this);
     this.handleSwiping = this.handleSwiping.bind(this);
     this.handleSwiped = this.handleSwiped.bind(this);
+    this.updateActiveIndex = this.updateActiveIndex.bind(this);
 
     this.state = {
       activeIndex: props.data.initialActiveIndex,
@@ -36,6 +37,7 @@ class Slider extends React.Component {
   componentDidMount() {
     // find the width of the swiper wrapper
     this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth})
+    window.addEventListener('resize', this.setState({sliderWrapperWidth: window.innerWidth || documentElement.clientWidth || body.clientWidth})); // eslint-disable-line
   }
 
   onPrev() {
@@ -91,6 +93,11 @@ class Slider extends React.Component {
       : this.setState({dX: 0, sliding: false}) // snap back to image
   }
 
+  updateActiveIndex(index) {
+    this.setState({activeIndex: index,
+      lazyLoadedArray: this.concatToLazyLoadedArray(index)})
+  }
+
   render() {
     const {data} = this.props
     return (
@@ -110,7 +117,7 @@ class Slider extends React.Component {
         </div>
         <div className="buttons">
           {data.images.map((image, index) =>
-            <div key={'button_'+index} className={this.state.activeIndex === index ? 'button active' : 'button'}/>
+            <div key={'button_'+index} className={this.state.activeIndex === index ? 'button active' : 'button'} onClick={() => this.updateActiveIndex(index)}/>
           )}
         </div>
         <div className="next" onClick={() => this.onNext()}>+</div>

@@ -51,7 +51,7 @@
 .buttons {
     z-index: 1;
     position: absolute;
-    bottom: 5px;
+    bottom: 2px;
     left: 0;
     width: 100%;
     text-align: center;
