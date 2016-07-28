@@ -10,7 +10,7 @@ const slideData = {
     '/src/img/03.jpg',
     '/src/img/04.png',
     '/src/img/05.jpg'],
-  initialActiveIndex: 3,
+  initialActiveIndex: 2,
   slideInterval: 1000,
   showBullets: true}
 
