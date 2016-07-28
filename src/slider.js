@@ -17,12 +17,8 @@ class Slider extends React.Component {
       lazyLoadedArray: [props.data.initialActiveIndex],
       dX: 0,
       sliderWrapperWidth: 0,
-      imagesLength: 0
+      imagesLength: (props.data.images.length -1)
     }
-  }
-
-  static get propTypes() {
-    return {}
   }
 
   static get defaultProps() {
@@ -37,8 +33,8 @@ class Slider extends React.Component {
 
   componentDidMount() {
     // find the width of the swiper wrapper
-    this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth,
-      imagesLength: this.props.images.length - 1})
+    this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth})
+    console.log(this.state.imagesLength)
   }
 
   onPrev() {
@@ -85,7 +81,7 @@ class Slider extends React.Component {
     }
 
     // look for a swipe and then prev/next
-    if (Math.abs(dX > this.state.sliderWrapperWidth * 0.35)) {
+    if (Math.abs(dX) > this.state.sliderWrapperWidth * 0.35) {
       this.setState({dX: 0})
       dX > 0 ? this.onNext() : this.onPrev()
     }
