@@ -1,5 +1,4 @@
 .slider-wrapper {
-    width: 100%;
     height: 200px;
     position: relative;
     overflow-x: hidden;
@@ -10,19 +9,16 @@
     height: 200px;
     overflow: hidden;
     white-space: nowrap;
-    width: 500%;
     position: absolute;
 }
 
 .slide {
-    width: 20%;
     display: inline-block;
     left: 0;
     top: 0;
 }
 
 .slide-inner {
-    width: 100%;
     height: 200px;
     background-size: contain;
     background-repeat: no-repeat;

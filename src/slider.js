@@ -13,12 +13,13 @@ class Slider extends React.Component {
     this.handleSwiping = this.handleSwiping.bind(this);
     this.handleSwiped = this.handleSwiped.bind(this);
     this.updateActiveIndex = this.updateActiveIndex.bind(this);
+    this.updateSliderWidth = this.updateSliderWidth.bind(this);
 
     this.state = {
       activeIndex: props.data.initialActiveIndex,
       lazyLoadedArray: [props.data.initialActiveIndex - 1, props.data.initialActiveIndex, props.data.initialActiveIndex + 1],
       dX: 0,
-      sliderWrapperWidth: 0,
+      sliderWrapperWidth: window.innerWidth,
       imagesLength: (props.data.images.length -1),
       sliding: false
     }
@@ -37,7 +38,15 @@ class Slider extends React.Component {
   componentDidMount() {
     // find the width of the swiper wrapper
     this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth})
-    window.addEventListener('resize', this.setState({sliderWrapperWidth: window.innerWidth || documentElement.clientWidth || body.clientWidth})); // eslint-disable-line
+    window.addEventListener('resize', this.updateSliderWidth)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateSliderWidth);
+  }
+
+  updateSliderWidth() {
+    this.setState({sliderWrapperWidth: window.innerWidth})
   }
 
   onPrev() {
@@ -101,23 +110,32 @@ class Slider extends React.Component {
   render() {
     const {data} = this.props
     return (
-      <Swipeable className="slider-wrapper" onSwiping={this.handleSwiping} onSwiped={this.handleSwiped} ref="sliderWrapper">
+      <Swipeable className="slider-wrapper"
+                 onSwiping={this.handleSwiping}
+                 onSwiped={this.handleSwiped}
+                 ref="sliderWrapper">
         <div className="prev" onClick={() => this.onPrev()}>-</div>
         <div className="slider"
              style={{left: -((this.state.activeIndex * this.state.sliderWrapperWidth) + this.state.dX) + 'px',
-             transition: 'left ' + (this.state.sliding ? (data.slideInterval / 1000) + 's' : 0 + 's')}}>
+             transition: 'left ' + (this.state.sliding ? (data.slideInterval / 1000) + 's' : 0 + 's'),
+             width: (this.state.sliderWrapperWidth * (this.state.imagesLength + 1)) + 'px'}}>
           {data.images.map((image, index) =>
-            <div className="slide" key={'image_'+index}>
+            <div className="slide"
+                 key={'image_'+index}
+                 style={{width: this.state.sliderWrapperWidth + 'px'}}>
               <div key={'slide_'+index}
                    className="slide-inner"
-                   style={{backgroundImage: 'url(' + ((this.state.lazyLoadedArray.indexOf(index) === -1) ? '/src/img/spinner.gif' : image) + ')'}}
+                   style={{width: this.state.sliderWrapperWidth + 'px',
+                   backgroundImage: 'url(' + ((this.state.lazyLoadedArray.indexOf(index) === -1) ? '/src/img/spinner.gif' : image) + ')'}}
               />
             </div>
           )}
         </div>
         <div className="buttons">
           {data.images.map((image, index) =>
-            <div key={'button_'+index} className={this.state.activeIndex === index ? 'button active' : 'button'} onClick={() => this.updateActiveIndex(index)}/>
+            <div key={'button_'+index}
+                 className={this.state.activeIndex === index ? 'button active' : 'button'}
+                 onClick={() => this.updateActiveIndex(index)}/>
           )}
         </div>
         <div className="next" onClick={() => this.onNext()}>+</div>
