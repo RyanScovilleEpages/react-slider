@@ -14,10 +14,6 @@
     position: absolute;
 }
 
-.slider.slideTo {
-    transition: left 1.5s;
-}
-
 .slide {
     width: 20%;
     display: inline-block;

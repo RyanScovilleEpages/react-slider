@@ -18,14 +18,15 @@ class Slider extends React.Component {
       lazyLoadedArray: [props.data.initialActiveIndex - 1, props.data.initialActiveIndex, props.data.initialActiveIndex + 1],
       dX: 0,
       sliderWrapperWidth: 0,
-      imagesLength: (props.data.images.length -1)
+      imagesLength: (props.data.images.length -1),
+      sliding: false
     }
   }
 
   static get defaultProps() {
     return {
       images: [],
-      slideInterval: 2500,
+      slideInterval: 1500,
       showBullets: true,
       initialActiveIndex: 0,
       lazyLoadImages: 1
@@ -38,26 +39,27 @@ class Slider extends React.Component {
   }
 
   onPrev() {
-    console.log('*********PREV')
     let prevIndex = (this.state.activeIndex - 1 >= 0)
       ? this.state.activeIndex - 1
       : 0
     this.setState({
       dX: 0,
       activeIndex: prevIndex,
-      lazyLoadedArray: this.concatToLazyLoadedArray(prevIndex)
+      lazyLoadedArray: this.concatToLazyLoadedArray(prevIndex),
+      sliding: true
     })
+
   }
 
   onNext() {
-    console.log('*********NEXT')
     let nextIndex = (this.state.activeIndex + 1 <= this.state.imagesLength)
       ? this.state.activeIndex + 1
       : this.state.imagesLength
     this.setState({
       dX: 0,
       activeIndex: nextIndex,
-      lazyLoadedArray: this.concatToLazyLoadedArray(nextIndex)
+      lazyLoadedArray: this.concatToLazyLoadedArray(nextIndex),
+      sliding: true
     })
   }
 
@@ -67,33 +69,31 @@ class Slider extends React.Component {
   }
 
   onSwiping(e, dX, dY, absX, absY, v) {
-    console.log(this.state.dX)
+    this.setState({sliding: false})
     // first slide, don't swipe left
     if (dX < 0 && this.state.activeIndex === 0) {
       this.setState({dX: 0})
-      console.log('firstSlide')
       return true
     }
 
     // last slide, don't swipe right
     if (dX > 0 && this.state.activeIndex === this.state.imagesLength) {
       this.setState({dX: 0})
-      console.log('lastSlide')
       return true
     }
-
-    // look for a swipe and then prev/next
-    if (absX > this.state.sliderWrapperWidth * 0.4) {
-      this.setState({dX: 0})
-      dX > 0 ? this.onNext() : this.onPrev()
-      return true
-    }
-
     this.setState({dX})
   }
 
   onSwiped(e, x, y, isFlick) {
-    this.setState({dX: 0})
+    // look for a swipe and then prev/next
+    if (Math.abs(x) > this.state.sliderWrapperWidth * 0.5) {
+      this.setState({dX: 0})
+      x > 0 ? this.onNext() : this.onPrev()
+      return true
+    } else {
+      // snap back to image
+      this.setState({dX: 0, sliding: false})
+    }
   }
 
   render() {
@@ -101,7 +101,9 @@ class Slider extends React.Component {
     return (
       <Swipeable className="slider-wrapper" onSwiping={this.onSwiping} onSwiped={this.onSwiped} ref="sliderWrapper">
         <div className="prev" onClick={() => this.onPrev()}>-</div>
-        <div className="slider" style={{left: -((this.state.activeIndex * this.state.sliderWrapperWidth) + this.state.dX) + 'px'}}>
+        <div className="slider"
+             style={{left: -((this.state.activeIndex * this.state.sliderWrapperWidth) + this.state.dX) + 'px',
+             transition: 'left ' + (this.state.sliding ? data.slideInterval / 1000 + 's' : 0 + 's')}}>
           {data.images.map((image, index) =>
             <div className="slide" key={'image_'+index}>
               <div key={'slide_'+index}
@@ -116,8 +118,5 @@ class Slider extends React.Component {
     )
   }
 }
-
-// <div ref={'slide_'+index} key={'slide_'+index} className="slide-inner" style={{backgroundImage: 'url('+image+')'}}/>
-
 
 export default Slider;
