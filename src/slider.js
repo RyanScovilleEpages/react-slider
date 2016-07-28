@@ -11,6 +11,7 @@ class Slider extends React.Component {
     this.onNext = this.onNext.bind(this);
     this.concatToLazyLoadedArray = this.concatToLazyLoadedArray.bind(this);
     this.onSwiping = this.onSwiping.bind(this);
+    this.onSwiped = this.onSwiped.bind(this);
 
     this.state = {
       activeIndex: props.data.initialActiveIndex,
@@ -42,6 +43,7 @@ class Slider extends React.Component {
       ? this.state.activeIndex - 1
       : 0
     this.setState({
+      dX: 0,
       activeIndex: prevIndex,
       lazyLoadedArray: this.concatToLazyLoadedArray(prevIndex)
     })
@@ -53,6 +55,7 @@ class Slider extends React.Component {
       ? this.state.activeIndex + 1
       : this.state.imagesLength
     this.setState({
+      dX: 0,
       activeIndex: nextIndex,
       lazyLoadedArray: this.concatToLazyLoadedArray(nextIndex)
     })
@@ -80,7 +83,7 @@ class Slider extends React.Component {
     }
 
     // look for a swipe and then prev/next
-    if (absX > this.state.sliderWrapperWidth * 0.5) {
+    if (absX > this.state.sliderWrapperWidth * 0.4) {
       this.setState({dX: 0})
       dX > 0 ? this.onNext() : this.onPrev()
       return true
@@ -89,10 +92,14 @@ class Slider extends React.Component {
     this.setState({dX})
   }
 
+  onSwiped(e, x, y, isFlick) {
+    this.setState({dX: 0})
+  }
+
   render() {
     const {data} = this.props
     return (
-      <Swipeable className="slider-wrapper" onSwiping={this.onSwiping} ref="sliderWrapper">
+      <Swipeable className="slider-wrapper" onSwiping={this.onSwiping} onSwiped={this.onSwiped} ref="sliderWrapper">
         <div className="prev" onClick={() => this.onPrev()}>-</div>
         <div className="slider" style={{left: -((this.state.activeIndex * this.state.sliderWrapperWidth) + this.state.dX) + 'px'}}>
           {data.images.map((image, index) =>
