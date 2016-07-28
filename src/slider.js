@@ -114,7 +114,7 @@ class Slider extends React.Component {
                  onSwiping={this.handleSwiping}
                  onSwiped={this.handleSwiped}
                  ref="sliderWrapper">
-        <div className="prev" onClick={() => this.onPrev()}>-</div>
+        <div className="prev" onClick={() => this.onPrev()}/>
         <div className="slider"
              style={{left: -((this.state.activeIndex * this.state.sliderWrapperWidth) + this.state.dX) + 'px',
              transition: 'left ' + (this.state.sliding ? (data.slideInterval / 1000) + 's' : 0 + 's'),
@@ -138,7 +138,7 @@ class Slider extends React.Component {
                  onClick={() => this.updateActiveIndex(index)}/>
           )}
         </div>
-        <div className="next" onClick={() => this.onNext()}>+</div>
+        <div className="next" onClick={() => this.onNext()}/>
       </Swipeable>
     )
   }

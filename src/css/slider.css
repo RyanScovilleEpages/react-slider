@@ -27,21 +27,24 @@
 
 .prev,
 .next {
-    width: 30px;
-    height: 30px;
     z-index: 1;
     position: absolute;
-    border: 1px dashed black;
-    top: 85px;
+    top: 94px;
     text-align: center;
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
 }
 
 .prev {
     left: 0;
+    border-right: 12px solid black;
 }
 
 .next {
     right: 0;
+    border-left: 12px solid black;
 }
 
 .buttons {
