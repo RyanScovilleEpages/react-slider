@@ -34,7 +34,10 @@ class Slider extends React.Component {
   componentDidMount() {
     // find the width of the swiper wrapper
     this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth})
-    console.log(this.state.imagesLength)
+
+    // preload next and previous images
+    this.concatToLazyLoadedArray(this.state.activeIndex + 1)
+    this.concatToLazyLoadedArray(this.state.activeIndex - 1)
   }
 
   onPrev() {
@@ -65,7 +68,7 @@ class Slider extends React.Component {
   }
 
   onSwiping(e, dX, dY, absX, absY, v) {
-    console.log(dX)
+    console.log(this.state.dX)
     // first slide, don't swipe left
     if (dX < 0 && this.state.activeIndex === 0) {
       this.setState({dX: 0})
@@ -81,11 +84,13 @@ class Slider extends React.Component {
     }
 
     // look for a swipe and then prev/next
-    if (Math.abs(dX) > this.state.sliderWrapperWidth * 0.35) {
+    if (Math.abs(dX) > this.state.sliderWrapperWidth * 0.5) {
       this.setState({dX: 0})
       dX > 0 ? this.onNext() : this.onPrev()
+      return true
     }
-    //console.log(e, dX, dY, absX, absY, v);
+
+    this.setState({dX})
   }
 
   render() {
