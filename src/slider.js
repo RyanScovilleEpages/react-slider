@@ -108,6 +108,11 @@ class Slider extends React.Component {
             </div>
           )}
         </div>
+        <div className="buttons">
+          {data.images.map((image, index) =>
+            <div key={'button_'+index} className={this.state.activeIndex === index ? 'button active' : 'button'}/>
+          )}
+        </div>
         <div className="next" onClick={() => this.onNext()}>+</div>
       </Swipeable>
     )

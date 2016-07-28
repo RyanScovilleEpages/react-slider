@@ -47,3 +47,26 @@
 .next {
     right: 0;
 }
+
+.buttons {
+    z-index: 1;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.button {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin: 0 10px;
+    background-color: black;
+}
+
+.button.active {
+    background-color: white;
+}
