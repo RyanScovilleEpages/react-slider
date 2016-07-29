@@ -12,7 +12,11 @@ const slideData = {
     '/src/img/05.jpg'],
   initialActiveIndex: 2,
   slideInterval: 1000,
-  showBullets: true}
+  showBullets: true,
+  autoplay: true,
+  autoplayDelay: 5000,
+  looping: true
+}
 
 ReactDOM.render(
     <Slider data={slideData} />,

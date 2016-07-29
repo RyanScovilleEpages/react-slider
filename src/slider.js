@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/slider.css';
 import Swipeable from 'react-swipeable';
+import TimerMixin from 'react-timer-mixin';
 
 class Slider extends React.Component {
 
@@ -21,7 +22,10 @@ class Slider extends React.Component {
       dX: 0,
       sliderWrapperWidth: window.innerWidth,
       imagesLength: (props.data.images.length -1),
-      sliding: false
+      sliding: false,
+      autoplay: props.data.autoplay,
+      autoplayDelay: props.data.autoplayDelay,
+      dragging: false
     }
   }
 
@@ -31,7 +35,9 @@ class Slider extends React.Component {
       slideInterval: 1500,
       showBullets: true,
       initialActiveIndex: 0,
-      lazyLoadImages: 1
+      lazyLoadImages: 1,
+      autoplay: true,
+      autoplayDelay: 5000
     }
   }
 
@@ -39,8 +45,15 @@ class Slider extends React.Component {
     // find the width of the swiper wrapper
     this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth})
     window.addEventListener('resize', this.updateSliderWidth)
+    this.autoplay()
   }
 
+  autoplay() {
+    TimerMixin.setTimeout(
+      () => { if (!this.state.dragging) { this.onNext(); this.autoplay() }},
+      this.state.autoplayDelay
+    );
+  }
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateSliderWidth);
   }
@@ -52,7 +65,7 @@ class Slider extends React.Component {
   onPrev() {
     let prevIndex = (this.state.activeIndex - 1 >= 0)
       ? this.state.activeIndex - 1
-      : 0
+      : this.state.imagesLength
     this.setState({
       dX: 0,
       activeIndex: prevIndex,
@@ -65,7 +78,7 @@ class Slider extends React.Component {
   onNext() {
     let nextIndex = (this.state.activeIndex + 1 <= this.state.imagesLength)
       ? this.state.activeIndex + 1
-      : this.state.imagesLength
+      : 0
     this.setState({
       dX: 0,
       activeIndex: nextIndex,
@@ -80,7 +93,7 @@ class Slider extends React.Component {
   }
 
   handleSwiping(e, dX, dY, absX, absY, v) {
-    this.setState({sliding: false})
+    this.setState({sliding: false, dragging: true})
     // first slide, don't swipe left
     if (dX < 0 && this.state.activeIndex === 0) {
       this.setState({dX: 0})
@@ -99,7 +112,7 @@ class Slider extends React.Component {
     // look for a swipe and then prev/next
     Math.abs(x) > (this.state.sliderWrapperWidth * 0.5)
       ? (x > 0) ? this.onNext() : this.onPrev()
-      : this.setState({dX: 0, sliding: false}) // snap back to image
+      : this.setState({dX: 0, sliding: false, dragging: false}) // snap back to image
   }
 
   updateActiveIndex(index) {
