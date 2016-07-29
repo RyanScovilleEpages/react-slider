@@ -25,7 +25,8 @@ class Slider extends React.Component {
       sliding: false,
       autoplay: props.data.autoplay,
       autoplayDelay: props.data.autoplayDelay,
-      dragging: false
+      dragging: false,
+      looping: props.data.looping
     }
   }
 
@@ -37,7 +38,8 @@ class Slider extends React.Component {
       initialActiveIndex: 0,
       lazyLoadImages: 1,
       autoplay: true,
-      autoplayDelay: 5000
+      autoplayDelay: 5000,
+      looping: true
     }
   }
 
@@ -63,9 +65,10 @@ class Slider extends React.Component {
   }
 
   onPrev() {
+    const looping = this.state.looping ? this.state.imagesLength : 0
     let prevIndex = (this.state.activeIndex - 1 >= 0)
       ? this.state.activeIndex - 1
-      : this.state.imagesLength
+      : looping
     this.setState({
       dX: 0,
       activeIndex: prevIndex,
@@ -76,9 +79,10 @@ class Slider extends React.Component {
   }
 
   onNext() {
+    const looping = this.state.looping ? 0 : this.state.imagesLength
     let nextIndex = (this.state.activeIndex + 1 <= this.state.imagesLength)
       ? this.state.activeIndex + 1
-      : 0
+      : looping
     this.setState({
       dX: 0,
       activeIndex: nextIndex,
