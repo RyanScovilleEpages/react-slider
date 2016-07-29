@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import './css/slider.css';
 import Swipeable from 'react-swipeable';
 import TimerMixin from 'react-timer-mixin';
 
-class Slider extends React.Component {
+function preventDefault (event) {
+  event.preventDefault();
+}
 
+class Slider extends React.Component {
   constructor(props) {
     super();
     this.onPrev = this.onPrev.bind(this);
@@ -30,9 +33,21 @@ class Slider extends React.Component {
     }
   }
 
+  static get propTypes () {
+    return {
+      images: PropTypes.array.isRequired,
+      slideInterval: PropTypes.number,
+      showBullets: PropTypes.bool,
+      initialActiveIndex: PropTypes.number,
+      lazyLoadImages: PropTypes.number,
+      autoplay: PropTypes.bool,
+      autoplayDelay: PropTypes.number,
+      looping: PropTypes.bool
+    }
+  }
+
   static get defaultProps() {
     return {
-      images: [],
       slideInterval: 1500,
       showBullets: true,
       initialActiveIndex: 0,
@@ -45,8 +60,9 @@ class Slider extends React.Component {
 
   componentDidMount() {
     // find the width of the swiper wrapper
-    this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth})
+    // this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth})
     window.addEventListener('resize', this.updateSliderWidth)
+    this.updateSliderWidth();
     this.autoplay()
   }
 
@@ -61,7 +77,8 @@ class Slider extends React.Component {
   }
 
   updateSliderWidth() {
-    this.setState({sliderWrapperWidth: window.innerWidth})
+    this.setState({sliderWrapperWidth: ReactDOM.findDOMNode(this.refs.sliderWrapper).offsetWidth})
+    // this.setState({sliderWrapperWidth: window.innerWidth})
   }
 
   onPrev() {
@@ -127,36 +144,37 @@ class Slider extends React.Component {
   render() {
     const {data} = this.props
     return (
-      <Swipeable className="slider-wrapper"
-                 onSwiping={this.handleSwiping}
-                 onSwiped={this.handleSwiped}
-                 ref="sliderWrapper">
-        <div className="prev" onClick={() => this.onPrev()}/>
-        <div className="slider"
-             style={{left: -((this.state.activeIndex * this.state.sliderWrapperWidth) + this.state.dX) + 'px',
-             transition: 'left ' + (this.state.sliding ? (data.slideInterval / 1000) + 's' : 0 + 's'),
-             width: (this.state.sliderWrapperWidth * (this.state.imagesLength + 1)) + 'px'}}>
-          {data.images.map((image, index) =>
-            <div className="slide"
-                 key={'image_'+index}
-                 style={{width: this.state.sliderWrapperWidth + 'px'}}>
-              <div key={'slide_'+index}
-                   className="slide-inner"
-                   style={{width: this.state.sliderWrapperWidth + 'px',
-                   backgroundImage: 'url(' + ((this.state.lazyLoadedArray.indexOf(index) === -1) ? '/src/img/spinner.gif' : image) + ')'}}
-              />
-            </div>
-          )}
-        </div>
-        <div className="buttons">
-          {data.images.map((image, index) =>
-            <div key={'button_'+index}
-                 className={this.state.activeIndex === index ? 'button active' : 'button'}
-                 onClick={() => this.updateActiveIndex(index)}/>
-          )}
-        </div>
-        <div className="next" onClick={() => this.onNext()}/>
-      </Swipeable>
+      <div>
+        <Swipeable className="slider-wrapper"
+                   onSwiping={this.handleSwiping}
+                   onSwiped={this.handleSwiped}
+                   ref="sliderWrapper">
+          <div className="prev" onClick={this.onPrev}/>
+          <div className="slider"
+               style={{left: -((this.state.activeIndex * this.state.sliderWrapperWidth) + this.state.dX) + 'px',
+               transition: 'left ' + (this.state.sliding ? (data.slideInterval / 1000) + 's' : 0 + 's'),
+               width: (this.state.sliderWrapperWidth * (this.state.imagesLength + 1)) + 'px'}}>
+            {data.images.map((image, index) =>
+              <div className="slide"
+                   key={index}
+                   style={{width: this.state.sliderWrapperWidth + 'px'}}>
+                <div className="slide-inner"
+                     style={{width: this.state.sliderWrapperWidth + 'px',
+                     backgroundImage: 'url(' + ((this.state.lazyLoadedArray.indexOf(index) === -1) ? '/src/img/spinner.gif' : image) + ')'}}
+                />
+              </div>
+            )}
+          </div>
+          <div className="buttons">
+            {data.images.map((image, index) =>
+              <div key={'button_'+index}
+                   className={this.state.activeIndex === index ? 'button active' : 'button'}
+                   onClick={() => this.updateActiveIndex(index)}/>
+            )}
+          </div>
+          <div className="next" onClick={this.onNext}/>
+        </Swipeable>
+      </div>
     )
   }
 }
